@@ -1,0 +1,102 @@
+<% locals.pageTitle = "Grid" %>
+
+<div>
+    <div id="grid">
+    </div>
+</div>
+
+<script src="/js/jquery-1.6.4.min.js"></script>
+<!--<script src="/socket.io/socket.io.js"></script>-->
+
+<script>
+	model = {};
+	model.cellData = <%- JSON.stringify(cellData) %>;
+	/**
+	var socket = io.connect();
+	socket.on('cellEdit', function(data) {
+		var cell = cellFromName(data.cellName);
+		model.cellData[data.cellName] = data.val;
+		if (cell.is('.inputmode') == false)
+			cell.text(data.val);
+	});
+	/**/
+	function cellFromName(cellName) {
+		var row = parseInt(cellName.replace(/\D/g,''));
+		var colName = cellName.replace(row.toString(),'');
+		var cellId = '#cell_' + colName + row;
+		return $(cellId);		
+	}
+	$(function() {
+		function enterEditMode(ev) {
+			var cell = $(ev.target);
+			var content = cell.text();
+			cell.text('');
+			var widthPadding = parseInt(cell.css('padding-left'))
+				+ parseInt(cell.css('padding-right'));
+			var heightPadding = parseInt(cell.css('padding-top'))
+				+ parseInt(cell.css('padding-bottom'));
+			var editor = $('<input type="text" />')
+				.addClass(editor)
+				.data('cell', cell)
+				.val(content)
+				.width((parseInt(cell.width()) - 2 - widthPadding) + 'px')
+				.height((parseInt(cell.height())- 2 - heightPadding) + 'px');
+			editor.bind('keyup', function(e) {
+				if (e.keyCode == 27) {
+					editor.unbind;
+					var cell = editor.data('cell');
+					cell.removeClass('inputmode');
+					var originalText = model.cellData[cell.data('cellName')];
+					$(this).parent().text(originalText);
+				}
+			})
+			editor.blur(function() {
+				editor.unbind();
+				var cell = editor.data('cell');
+				var val = $(this).val();
+				var cellName = cell.data('cellName');
+				model.cellData[cellName] = val;
+				//socket.emit('cellEdit', {cellName:cellName, val:val});
+				cell.removeClass('inputmode');
+				$(this).parent().text(val);
+			});
+			cell.append(editor);
+			cell.addClass('inputmode');
+			editor.focus();
+		}
+		var cells = [];
+		var rows = 4;
+		var cols = 8;
+		var charA = 'A'.charCodeAt();
+		var grid = $('#grid');
+		grid.append($('<div class="cell empty">'));
+		for (var col=1; col<=cols; ++col) {
+			var colName = String.fromCharCode(charA - 1 + col);
+			grid.append($('<div class="cell cellname col_' + colName + '">' + colName + '</div>'));
+		}	
+		grid.append($('<div class="break"/>'));
+		for (var row = 1; row <= rows; ++row) {
+			grid.append($('<div class="cell cellname row_' + row + '">' + row + '</div>'));
+			for (var col=1; col<=cols; ++col) {
+				var colName = String.fromCharCode(charA - 1 + col);
+				var cellName = colName + row;
+				var cell = $('<div>')
+					.attr('id', 'cell_' + colName + row)
+					.data('cellName', cellName)
+					.addClass('row_' + row)
+					.addClass('col_' + colName)
+					.addClass('cell')
+					.click(enterEditMode);
+				grid.append(cell);
+			}
+			grid.append($('<div class="break"/>'));
+		}
+		
+		for (var cellName in model.cellData) {
+			var cell = cellFromName(cellName);
+			cell.text(model.cellData[cellName]);
+		}
+	});
+	
+	
+</script>
