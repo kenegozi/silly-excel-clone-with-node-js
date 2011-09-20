@@ -1,0 +1,10 @@
+{
+    "name": "nodejs-demo",
+    "description": "Silly collaborative exce",
+    "version": "0.1.0",
+    "author": "Ken Egozi",
+    "dependencies": {
+      "express": ">=0",
+      "ejs": ">=0"
+    }
+}
