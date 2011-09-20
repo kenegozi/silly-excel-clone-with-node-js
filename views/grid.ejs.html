@@ -6,12 +6,12 @@
 </div>
 
 <script src="/js/jquery-1.6.4.min.js"></script>
-<!--<script src="/socket.io/socket.io.js"></script>-->
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
 	model = {};
 	model.cellData = <%- JSON.stringify(cellData) %>;
-	/**
+	/**/
 	var socket = io.connect();
 	socket.on('cellEdit', function(data) {
 		var cell = cellFromName(data.cellName);
@@ -56,7 +56,7 @@
 				var val = $(this).val();
 				var cellName = cell.data('cellName');
 				model.cellData[cellName] = val;
-				//socket.emit('cellEdit', {cellName:cellName, val:val});
+				socket.emit('cellEdit', {cellName:cellName, val:val});
 				cell.removeClass('inputmode');
 				$(this).parent().text(val);
 			});

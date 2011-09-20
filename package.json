@@ -5,6 +5,7 @@
     "author": "Ken Egozi",
     "dependencies": {
       "express": ">=0",
-      "ejs": ">=0"
+      "ejs": ">=0",
+      "socket.io": ">=0"
     }
 }
